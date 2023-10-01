@@ -4,14 +4,14 @@
  * Divi Button Event Tagger
  *
  * @link              https://github.com/Spcktr/divi-button-event-tagger
- * @since             0.1.0
+ * @since             1.1.0
  * @package           Divi_Button_Event_Tagger_Plugin
  *
  * @wordpress-plugin
  * Plugin Name:       Divi Button Event Tagger
  * Plugin URI:        https://github.com/Spcktr/divi-button-event-tagger
  * Description:       Insert missing data-vars-ga attributes for button links. This will help Google Analytics tracking buttons for themes like Divi.
- * Version:           1.0.0
+ * Version:           1.0.1
  * Author:            Sprckt
  * Author URI:        https://github.com/spcktr
  * License:           GNU General Public License v3
@@ -25,7 +25,7 @@ if (!defined('WPINC')) {
 }
 
 define('DIVI_BUTTON_EVENT_TAGGER_PLUGIN_NAME', 'divi-button-event-tagger');
-define('DIVI_BUTTON_EVENT_TAGGER_PLUGIN_VERSION', '1.0.0');
+define('DIVI_BUTTON_EVENT_TAGGER_PLUGIN_VERSION', '1.1.0');
 define('BUTTON_EVENT_SELECTOR', '.et_pb_button'); // Default for Divi.
 
 /**
@@ -37,13 +37,14 @@ define('BUTTON_EVENT_SELECTOR', '.et_pb_button'); // Default for Divi.
 
 function enqueue_divi_button_event_tagger_javascript()
 {	
-    wp_register_script( DIVI_BUTTON_EVENT_TAGGER_PLUGIN_NAME, plugin_dir_url( __FILE__ ) . 'public/js/' . DIVI_BUTTON_EVENT_TAGGER_PLUGIN_NAME . '.js', '', DIVI_BUTTON_EVENT_TAGGER_PLUGIN_VERSION, true );
+    $uri = plugins_url('', __FILE__);
+    wp_register_script( DIVI_BUTTON_EVENT_TAGGER_PLUGIN_NAME, $uri . '/public/js/divi-button-event-tagger.js', array('jquery'), DIVI_BUTTON_EVENT_TAGGER_PLUGIN_VERSION, true );
     wp_enqueue_script( DIVI_BUTTON_EVENT_TAGGER_PLUGIN_NAME );
 
-    $script = 'addDiviLinkTitles();';
+    $script = 'addDivibuttonevents();';
     wp_add_inline_script( DIVI_BUTTON_EVENT_TAGGER_PLUGIN_NAME, $script, 'after' );
 
-    $query_selector = LINK_HELPER_SELECTOR;
+    $query_selector = BUTTON_EVENT_SELECTOR;
     $query_selector = apply_filters( 'button_event_selector', $query_selector );
     $php_vars = array(
         'querySelector' => $query_selector

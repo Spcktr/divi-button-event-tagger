@@ -6,11 +6,11 @@ function addDivibuttonevents() {
     eltsArr.map((elt) => {
         try {
             let btnTxt = elt.innerText;
-            elt.setAttribute("data-vars-ga-category", "button");
-            elt.setAttribute("data-vars-ga-action", "click");
-            elt.setAttribute("data-vars-ga-label", docTitle + ' - ' + btnTxt);
+            elt.setAttribute("data-vars-ga-category", "button"); // change to suit event name
+            elt.setAttribute("data-vars-ga-action", "click"); // change to suit action
+            elt.setAttribute("data-vars-ga-label", docTitle + ' - ' + btnTxt); // page title and button text
         } catch (e) {
             console.log("Divi Button Event Tagger did not fire correctly" + php_vars.querySelectorAll);
         }
     });
-})();
+};
