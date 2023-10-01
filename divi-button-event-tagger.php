@@ -11,8 +11,8 @@
  * Plugin Name:       Divi Button Event Tagger
  * Plugin URI:        https://github.com/Spcktr/divi-button-event-tagger
  * Description:       Insert missing data-vars-ga attributes for button links. This will help Google Analytics tracking buttons for themes like Divi.
- * Version:           1.0.1
- * Author:            Sprckt
+ * Version:           1.1.0
+ * Author:            Tim H.
  * Author URI:        https://github.com/spcktr
  * License:           GNU General Public License v3
  * License URI:       https://github.com/spcktr
