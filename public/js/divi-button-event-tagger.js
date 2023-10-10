@@ -13,4 +13,16 @@ function addDivibuttonevents() {
             console.log("Divi Button Event Tagger did not fire correctly" + php_vars.querySelectorAll);
         }
     });
+    // removes rel='nofollow' from buttons for SEO
+    const anchors = document.querySelectorAll('.et_pb_button');
+
+    anchors.forEach(anchor => {
+        if (anchor.hasAttribute('rel')) {
+        const relAttribute = anchor.getAttribute('rel');
+
+        if (relAttribute.includes('nofollow')) {
+            anchor.removeAttribute('rel');
+        }
+        }
+    });
 };
