@@ -14,14 +14,12 @@ function addDivibuttonevents() {
         }
     });
     // removes rel='nofollow' from buttons for SEO
-    const anchors = document.querySelectorAll('.et_pb_button');
-
-    anchors.forEach(anchor => {
-        if (anchor.hasAttribute('rel')) {
-        const relAttribute = anchor.getAttribute('rel');
+      elts.forEach(elt => {
+        if (elt.hasAttribute('rel')) {
+        const relAttribute = elt.getAttribute('rel');
 
         if (relAttribute.includes('nofollow')) {
-            anchor.removeAttribute('rel');
+            elt.removeAttribute('rel');
         }
         }
     });
