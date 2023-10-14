@@ -1,4 +1,5 @@
-function addDivibuttonevents() {
+jQuery(document).ready(function($) {
+    function addDivibuttonevents() {
     let elts = document.querySelectorAll(".et_pb_button");
     if (elts === undefined || elts === "") return;
     let eltsArr = Array.from(elts);
@@ -13,14 +14,11 @@ function addDivibuttonevents() {
             console.log("Divi Button Event Tagger did not fire correctly" + php_vars.querySelectorAll);
         }
     });
-    // removes rel='nofollow' from buttons for SEO
-      elts.forEach(elt => {
-        if (elt.hasAttribute('rel')) {
-        const relAttribute = elt.getAttribute('rel');
 
-        if (relAttribute.includes('nofollow')) {
-            elt.removeAttribute('rel');
-        }
-        }
-    });
 };
+
+    // Call the function when the page is fully loaded
+    $(window).on('load', function() {
+        addDivibuttonevents();
+    });
+});

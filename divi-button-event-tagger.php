@@ -11,7 +11,7 @@
  * Plugin Name:       Divi Button Event Tagger
  * Plugin URI:        https://github.com/Spcktr/divi-button-event-tagger
  * Description:       Insert missing data-vars-ga attributes for button links. This will help Google Analytics tracking buttons for themes like Divi.
- * Version:           1.1.2
+ * Version:           1.2.0
  * Author:            Tim H.
  * Author URI:        https://github.com/spcktr
  * License:           GNU General Public License v3
@@ -23,32 +23,105 @@
 if (!defined('WPINC')) {
     die;
 }
-
-define('DIVI_BUTTON_EVENT_TAGGER_PLUGIN_NAME', 'divi-button-event-tagger');
-define('DIVI_BUTTON_EVENT_TAGGER_PLUGIN_VERSION', '1.1.2');
+define('event_tagger_version', '1.2.0');
 define('BUTTON_EVENT_SELECTOR', '.et_pb_button'); // Default for Divi.
 
-/**
- * Enqueue the Link Helper JavaScript Library
- * and Inline Script
- * 
- * This supports the button_event_selector filter.
- */
 
-function enqueue_divi_button_event_tagger_javascript()
-{	
-    $uri = plugins_url('', __FILE__);
-    wp_register_script( DIVI_BUTTON_EVENT_TAGGER_PLUGIN_NAME, $uri . '/public/js/divi-button-event-tagger.js', array('jquery'), DIVI_BUTTON_EVENT_TAGGER_PLUGIN_VERSION, true );
-    wp_enqueue_script( DIVI_BUTTON_EVENT_TAGGER_PLUGIN_NAME );
 
-    $script = 'addDivibuttonevents();';
-    wp_add_inline_script( DIVI_BUTTON_EVENT_TAGGER_PLUGIN_NAME, $script, 'after' );
-
-    $query_selector = BUTTON_EVENT_SELECTOR;
-    $query_selector = apply_filters( 'button_event_selector', $query_selector );
-    $php_vars = array(
-        'querySelector' => $query_selector
-    );
-    wp_localize_script( DIVI_BUTTON_EVENT_TAGGER_PLUGIN_NAME, 'php_vars', $php_vars );
+// Enqueue the first script
+function enqueue_button_tagger() {
+    if (get_option('script1_enabled')) {
+        wp_enqueue_script('button_tagger', plugin_dir_url(__FILE__) . 'public/js/button-event-tagger.js', array('jquery'), event_tagger_version, true);
+        $query_selector = BUTTON_EVENT_SELECTOR;
+        $query_selector = apply_filters( 'button_event_selector', $query_selector );
+        $php_vars = array(
+         'querySelector' => $query_selector
+        );
+        wp_localize_script( 'button-event-tagger.js', 'php_vars', $php_vars );
+    }
 }
-add_action( 'wp_enqueue_scripts', 'enqueue_divi_button_event_tagger_javascript' );
+add_action('wp_enqueue_scripts', 'enqueue_button_tagger');
+
+// Enqueue the second script
+function enqueue_nofollower() {
+    if (get_option('script2_enabled')) {
+        wp_enqueue_script('nofollower', plugin_dir_url(__FILE__) . 'public/js/remove-nofollow.js', array('jquery'), event_tagger_version, true);
+    }
+}
+add_action('wp_enqueue_scripts', 'enqueue_nofollower');
+
+// Create the plugin settings page
+function script_control_settings_page() {
+    add_menu_page('Analytics Button Tagger', 'Analytics Button Tagger', 'manage_options', 'script-control-settings', 'script_control_settings', 'dashicons-admin-generic');
+}
+add_action('admin_menu', 'script_control_settings_page');
+
+// Create the settings page content
+function script_control_settings() {
+    ?>
+    <div class="wrap">
+        <h2>Google Analytics Button Tagger</h2>
+        <form method="post" action="options.php">
+            <?php
+            settings_fields('script-control-settings');
+            do_settings_sections('script-control-settings');
+            ?>
+            <table class="form-table">
+                <tr>
+                    <th scope="row">Enable link tagging</th>
+                    <td>
+                        <input type="checkbox" name="script1_enabled" value="1" <?php checked(get_option('script1_enabled'), 1); ?>>
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row">Remove <span style="code">rel="nofollow"</span></th>
+                    <td>
+                        <input type="checkbox" name="script2_enabled" value="1" <?php checked(get_option('script2_enabled'), 1); ?>>
+                    </td>
+                </tr>
+            </table>
+            <?php submit_button(); ?>
+        </form>
+    </div>
+    <?php
+}
+
+// Register settings and options
+function script_control_register_settings() {
+    register_setting('script-control-settings', 'script1_enabled');
+    register_setting('script-control-settings', 'script2_enabled');
+}
+add_action('admin_init', 'script_control_register_settings');
+
+
+
+// define('DIVI_BUTTON_EVENT_TAGGER_PLUGIN_NAME', 'divi-button-event-tagger');
+// define('DIVI_BUTTON_EVENT_TAGGER_PLUGIN_VERSION', '1.2.0');
+// define('BUTTON_EVENT_SELECTOR', '.et_pb_button'); // Default for Divi.
+
+// /**
+//  * Enqueue the Link Helper JavaScript Library
+//  * and Inline Script
+//  * 
+//  * This supports the button_event_selector filter.
+//  */
+
+// function enqueue_divi_button_event_tagger_javascript()
+// {	
+//     $uri = plugins_url('', __FILE__);
+//     wp_register_script( DIVI_BUTTON_EVENT_TAGGER_PLUGIN_NAME, $uri . '/public/js/divi-button-event-tagger.js', array('jquery'), DIVI_BUTTON_EVENT_TAGGER_PLUGIN_VERSION, true );
+//     wp_enqueue_script( DIVI_BUTTON_EVENT_TAGGER_PLUGIN_NAME );
+
+//     $script = 'addDivibuttonevents();';
+//     wp_add_inline_script( DIVI_BUTTON_EVENT_TAGGER_PLUGIN_NAME, $script, 'after' );
+
+//     $query_selector = BUTTON_EVENT_SELECTOR;
+//     $query_selector = apply_filters( 'button_event_selector', $query_selector );
+//     $php_vars = array(
+//         'querySelector' => $query_selector
+//     );
+//     wp_localize_script( DIVI_BUTTON_EVENT_TAGGER_PLUGIN_NAME, 'php_vars', $php_vars );
+// }
+// add_action( 'wp_enqueue_scripts', 'enqueue_divi_button_event_tagger_javascript' );
+
+
